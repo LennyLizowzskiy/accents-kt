@@ -6,19 +6,20 @@ import com.lizowzskiy.accents.os_specific.unix.UnixEnvironment.Gtk
 import com.lizowzskiy.accents.os_specific.unix.UnixEnvironment.Kde
 
 
-internal fun getUnixAccentColor(): Color {
-    return when (UnixEnvironment.current) {
+internal fun getUnixAccentColor(): Color =
+    when (UnixEnvironment.current) {
         Gtk -> getGtk3AccentColor()
         Kde -> getKdeAccentColor()
         FreeDesktop -> getFreedesktopAccentColor()
     }
-}
 
 internal fun getCurrentUserHomePath(): String =
     System.getenv("HOME")
 
-internal fun getCurrentUserConfigDir(): String =
-    System.getenv("XDG_CONFIG_HOME") ?: "${getCurrentUserHomePath()}/.config"
+internal fun getCurrentUserConfigDir(
+    fallback: String = "${getCurrentUserHomePath()}/.config"
+): String =
+    System.getenv("XDG_CONFIG_HOME") ?: fallback
 
 internal enum class UnixEnvironment {
     Gtk,
@@ -30,7 +31,7 @@ internal enum class UnixEnvironment {
     FreeDesktop; // Wayland
 
     companion object {
-        @get:Throws(NoSuchElementException::class)
+        @get:Throws(IllegalStateException::class)
         val current: UnixEnvironment by lazy {
             when {
                 isFreeDesktopAvailable -> FreeDesktop
@@ -38,7 +39,7 @@ internal enum class UnixEnvironment {
                 isGtk3Available -> Gtk
                 // gtk has the lowest tier because it's installed on basically every desktop Linux system
 
-                else -> throw NoSuchElementException("host unix environment is not supported")
+                else -> throw IllegalStateException("host unix environment is not supported")
             }
         }
     }
