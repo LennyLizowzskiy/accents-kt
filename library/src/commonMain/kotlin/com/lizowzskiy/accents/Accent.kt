@@ -11,7 +11,7 @@ package com.lizowzskiy.accents
  */
 expect fun getAccentColor(): Color
 
-data class Color(
+data class Color internal constructor(
     val r: Short = 255,
     val g: Short = 255,
     val b: Short = 255,

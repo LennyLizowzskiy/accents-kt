@@ -1,9 +1,9 @@
 package com.lizowzskiy.accents.util
 
-internal fun runBashCommand(cmd: String): ProcessBuilder {
+internal fun buildBashCommand(cmd: String, redirectErrorStream: Boolean = true): ProcessBuilder {
     return ProcessBuilder(
         "bash", "-c", cmd
     ).apply {
-        redirectErrorStream(true)
+        if (redirectErrorStream) this.redirectErrorStream(true)
     }
 }
