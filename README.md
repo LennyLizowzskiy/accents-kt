@@ -11,7 +11,7 @@ Kotlin Multiplatform library for retrieving accent color in a simple way.
 - [x] JVM / Linux _(KDE)_
 - [x] JVM / Linux _(FreeDesktop, dbus)_
 - [ ] Native / macOS
-- [ ] Native / Linux _(FreeDesktop, dbus)_
+- [ ] Native / Linux
 - [ ] Native / Windows
 
 > Web targets won't be supported. Check [developer.mozilla/css/accent-color](https://developer.mozilla.org/en-US/docs/Web/CSS/accent-color) if you need this feature.
