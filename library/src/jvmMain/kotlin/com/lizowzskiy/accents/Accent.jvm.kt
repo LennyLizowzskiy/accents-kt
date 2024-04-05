@@ -7,9 +7,6 @@ import com.lizowzskiy.accents.os_specific.getWindowsAccentColor
 import com.lizowzskiy.accents.os_specific.unix.getUnixAccentColor
 import org.apache.commons.lang3.SystemUtils
 
-/**
- * Get system-wide accent color of the current target
- */
 actual fun getAccentColor(): Color =
     when {
         SystemUtils.IS_OS_WINDOWS -> getWindowsAccentColor()

@@ -3,10 +3,26 @@ plugins {
     alias(libs.plugins.androidLibrary)
 }
 
+android {
+    compileSdkVersion = "android-31"
+    defaultConfig {
+        minSdk = 23
+    }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
+}
+
 kotlin {
 //    targetHierarchy.default()
+    jvmToolchain(17)
 
-    jvm()
+    jvm {
+
+    }
 
     androidTarget {
         publishLibraryVariants("release")
@@ -40,9 +56,9 @@ kotlin {
             }
         }
 
-        val androidMain by getting {
-
-        }
+//        val androidMain by getting {
+//
+//        }
     }
 }
 
