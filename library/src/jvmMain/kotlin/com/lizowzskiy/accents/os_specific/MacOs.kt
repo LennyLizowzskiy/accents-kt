@@ -1,30 +1,36 @@
 package com.lizowzskiy.accents.os_specific
 
 import com.lizowzskiy.accents.Color
+import com.lizowzskiy.accents.UnauthorizedAccessException
+import com.lizowzskiy.accents.UnsupportedOutputException
+import com.lizowzskiy.accents.util.getFullOutput
 import com.lizowzskiy.accents.util.use
 
-fun getMacOsAccentColor(): Color {
+internal fun getMacOsAccentColor(): Color {
     val osVersion = getMacOsMajorVersion()
     return when {
         osVersion >= 11 -> getMacOsAccentColorFromCli()
 
-        else -> throw IllegalArgumentException("macOS version $osVersion is not supported")
+        else -> throw UnsupportedOperationException("macOS version $osVersion is not supported")
     }
 }
 
-fun getMacOsAccentColorFromCli(): Color {
-    val accent = ProcessBuilder("defaults", "read", "-g", "AppleAccentColor")
-        .redirectErrorStream(true)
-        .use {
-            inputStream.use {
-                val output = it.reader().use { it.readText() }
-                val num = output.split("\n")[0].split(" ")[0]
+internal fun getMacOsAccentColorFromCli(): Color {
+    val output = try {
+        ProcessBuilder("defaults", "read", "-g", "AppleAccentColor")
+            .getFullOutput()
+    } catch (e: SecurityException) {
+        throw UnauthorizedAccessException(cause = e)
+    }
 
-                Accent.fromAppleAccentColorNum(num.toInt())
-            }
-        }
+    val result = try {
+        val num = output.split("\n")[0].split(" ")[0]
+        Accent.fromAppleAccentColorNum(num.toInt()).value
+    } catch(e: Exception) {
+        throw UnsupportedOutputException(output, cause = e)
+    }
 
-    return accent.value
+    return result
 }
 
 internal fun getMacOsMajorVersion(): Int {
@@ -33,14 +39,13 @@ internal fun getMacOsMajorVersion(): Int {
             redirectErrorStream(true)
         }.use {
             var version: String? = null
-            val reader = inputReader().use {
+            inputReader().use {
                 for (line in it.lines()) {
                     if (line.startsWith("ProductVersion:")) {
                         version = line.substringAfter("ProductVersion:").trim()
                         break
                     }
                 }
-                version
             }
             if (version == null)
                 throw IllegalArgumentException("ProductVersion was not found in sw_vers")

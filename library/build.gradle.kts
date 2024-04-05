@@ -39,6 +39,10 @@ kotlin {
                 implementation(libs.apache.commonLang)
             }
         }
+
+        val androidMain by getting {
+
+        }
     }
 }
 

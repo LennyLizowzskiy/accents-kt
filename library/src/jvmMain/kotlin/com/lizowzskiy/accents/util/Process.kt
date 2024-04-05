@@ -1,5 +1,7 @@
 package com.lizowzskiy.accents.util
 
+import java.io.Reader
+
 fun <T : Any> ProcessBuilder.use(
     block: Process.() -> T
 ): T {
@@ -11,5 +13,13 @@ fun <T : Any> ProcessBuilder.use(
     return result
 }
 
-fun Process.getOutput(): String =
-    inputReader().use { it.readText() }
+fun ProcessBuilder.getFullOutput(): String {
+    redirectErrorStream(true)
+
+    val result: String
+    start().apply {
+        result = inputReader().use(Reader::readText)
+        destroy()
+    }
+    return result
+}

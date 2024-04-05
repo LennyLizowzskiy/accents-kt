@@ -1,10 +1,11 @@
 package com.lizowzskiy.accents.os_specific
 
 import com.lizowzskiy.accents.Color
-import com.lizowzskiy.accents.util.getOutput
-import com.lizowzskiy.accents.util.use
+import com.lizowzskiy.accents.UnauthorizedAccessException
+import com.lizowzskiy.accents.UnsupportedOutputException
+import com.lizowzskiy.accents.util.getFullOutput
 
-fun getWindowsAccentColor(): Color {
+internal fun getWindowsAccentColor(): Color {
     val osVersion = System.getProperty("os.version")
 
     // Windows 10: 10.*
@@ -21,7 +22,7 @@ fun getWindowsAccentColor(): Color {
  *
  * Requirements: Windows 10+, access to reading registry (`reg`)
  */
-fun getWindowsAccentColorFromRegistry(
+internal fun getWindowsAccentColorFromRegistry(
     path: String = """HKEY_CURRENT_USER\Software\Microsoft\Windows\DWM""",
     value: String = "AccentColor"
 ): Color {
@@ -33,25 +34,33 @@ fun getWindowsAccentColorFromRegistry(
     \
     \
      */
-    val output = ProcessBuilder(
-        "reg", "query",
-        path, "/v", value
-    )
-        .redirectErrorStream(true)
-        .use(Process::getOutput)
+    val output = try {
+        ProcessBuilder(
+            "reg", "query",
+            path, "/v", value
+        ).getFullOutput()
+    } catch (e: SecurityException) {
+        throw UnauthorizedAccessException(cause = e)
+    }
 
-    // output format: #aarrggbb
-    val hexColor = hexColorRegex.find(output)?.value
-        ?: throw IllegalArgumentException("no value $value was found at $path")
+    val result = try {
+        // output format: #aarrggbb
+        val hexColor = hexColorRegex.find(output)?.value
+            ?: throw IllegalArgumentException("no value $value was found at $path")
 
-    return Color.fromHexRgb(
-        input = run {
-            val alpha = hexColor.substring(0, 2)
-            val rgb = hexColor.substring(2)
+        Color.fromHexRgb(
+            input = run {
+                val alpha = hexColor.substring(0, 2)
+                val rgb = hexColor.substring(2)
 
-            rgb + alpha
-        }
-    )
+                rgb + alpha
+            }
+        )
+    } catch(e: IllegalArgumentException) {
+        throw UnsupportedOutputException(output, cause = e)
+    }
+
+    return result
 }
 
 private val hexColorRegex = Regex("(?<=0x)[0-9a-fA-F]{6,8}")
