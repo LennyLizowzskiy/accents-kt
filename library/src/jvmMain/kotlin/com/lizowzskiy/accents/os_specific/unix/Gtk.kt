@@ -1,15 +1,16 @@
 package com.lizowzskiy.accents.os_specific.unix
 
 import com.lizowzskiy.accents.Color
+import com.lizowzskiy.accents.UnauthorizedAccessException
+import com.lizowzskiy.accents.UnsupportedOutputException
 import com.lizowzskiy.accents.util.buildBashCommand
-import com.lizowzskiy.accents.util.getOutput
-import com.lizowzskiy.accents.util.use
+import com.lizowzskiy.accents.util.getFullOutput
 import java.io.File
 
 /**
  * Get GTK3 accent color from the currently active theme
  */
-fun getGtk3AccentColor(
+internal fun getGtk3AccentColor(
     gtk3ConfigPath: String = "${getCurrentUserConfigDir()}/gtk-3.0/gtk.css"
 ): Color {
     /*
@@ -18,10 +19,20 @@ fun getGtk3AccentColor(
     > grep -oP '(?<=@define-color accent_color \#)[a-fA-F0-9]{6}' ~/.config/gtk-3.0/gtk.css
     c4b28a
     */
-    val output = buildBashCommand("""grep -oP '(?<=@define-color accent_color \#)[a-fA-F0-9]{6}' $gtk3ConfigPath""")
-        .use(Process::getOutput)
+    val output = try {
+        buildBashCommand("""grep -oP '(?<=@define-color accent_color \#)[a-fA-F0-9]{6}' $gtk3ConfigPath""")
+            .getFullOutput()
+    } catch (e: SecurityException) {
+        throw UnauthorizedAccessException(cause = e)
+    }
 
-    return Color.fromHexRgb(output)
+    val result = try {
+        Color.fromHexRgb(output)
+    } catch (e: IllegalArgumentException) {
+        throw UnsupportedOutputException(output, cause = e)
+    }
+
+    return result
 }
 
 internal val isGtk3Available: Boolean by lazy(LazyThreadSafetyMode.NONE) {

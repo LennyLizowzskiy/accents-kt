@@ -1,4 +1,3 @@
-@file:JvmName("AccentUtil")
 @file:Suppress("unused")
 
 package com.lizowzskiy.accents
@@ -7,7 +6,9 @@ package com.lizowzskiy.accents
 /**
  * Get system-wide accent color of the current target
  *
- * @throws
+ * @throws UnauthorizedAccessException if we couldn't receive the output from a machine because the system rejected the call
+ * @throws UnsupportedOutputException if we could receive the output a machine, but the implementation of the parser couldn't convert it
+ * @throws UnsupportedOperationException if given environment is not supported
  */
 expect fun getAccentColor(): Color
 
@@ -21,7 +22,7 @@ data class Color internal constructor(
         /**
          * Convert hex string into [Color]
          *
-         * @param input [String] in a format of `#RRGGBBAA`, where `#` and `AA` are optional
+         * @param input [String] in the format of `#RRGGBBAA`, where `#` and `AA` are optional
          *
          * @throws IllegalArgumentException if [input] is considered invalid
          */

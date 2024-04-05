@@ -1,3 +1,5 @@
+@file:JvmName("AccentUtil")
+
 package com.lizowzskiy.accents
 
 import com.lizowzskiy.accents.os_specific.getMacOsAccentColor
@@ -14,9 +16,5 @@ actual fun getAccentColor(): Color =
         SystemUtils.IS_OS_MAC -> getMacOsAccentColor()
         SystemUtils.IS_OS_UNIX -> getUnixAccentColor()
 
-        else -> throw IllegalArgumentException(
-            "retrieving accent color on current system " +
-                    "(name: ${System.getProperty("os.name")}, " +
-                    "version: ${System.getProperty("version")})" +
-                    "is not supported")
+        else -> throwUnsupportedOsException()
     }

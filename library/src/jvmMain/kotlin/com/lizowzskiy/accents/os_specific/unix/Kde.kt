@@ -1,9 +1,10 @@
 package com.lizowzskiy.accents.os_specific.unix
 
 import com.lizowzskiy.accents.Color
+import com.lizowzskiy.accents.UnauthorizedAccessException
+import com.lizowzskiy.accents.UnsupportedOutputException
 import com.lizowzskiy.accents.util.buildBashCommand
-import com.lizowzskiy.accents.util.getOutput
-import com.lizowzskiy.accents.util.use
+import com.lizowzskiy.accents.util.getFullOutput
 
 /**
  * Get KDE accent color from config files
@@ -11,7 +12,7 @@ import com.lizowzskiy.accents.util.use
  * Requirements: KDE
  * **Linux-only**
  */
-fun getKdeAccentColor(
+internal fun getKdeAccentColor(
     plasmaConfigPath: String = "${getCurrentUserConfigDir()}/plasma-org.kde.plasma.desktop-appletsrc"
 ): Color {
     /*
@@ -20,10 +21,20 @@ fun getKdeAccentColor(
     > grep -oP '(?<=AccentColor=)[^,]+' ~/.config/plasma-org.kde.plasma.desktop-appletsrc | sed 's/^"//;s/"$//'
     #C43928
     */
-    val output = buildBashCommand("""grep -oP '(?<=AccentColor=)[^,]+' $plasmaConfigPath | sed 's/^"//;s/"${'$'}//'""")
-        .use(Process::getOutput)
+    val output = try {
+        buildBashCommand("""grep -oP '(?<=AccentColor=)[^,]+' $plasmaConfigPath | sed 's/^"//;s/"${'$'}//'""")
+            .getFullOutput()
+    } catch (e: SecurityException) {
+        throw UnauthorizedAccessException(cause = e)
+    }
 
-    return Color.fromHexRgb(output)
+    val result = try {
+        Color.fromHexRgb(output)
+    } catch (e: IllegalArgumentException) {
+        throw UnsupportedOutputException(output, cause = e)
+    }
+
+    return result
 }
 
 internal val isKdeAvailable: Boolean by lazy(LazyThreadSafetyMode.NONE) {
