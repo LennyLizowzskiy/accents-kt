@@ -21,15 +21,14 @@ Also, I don't guarantee that I will be able to support Native and/or macOS targe
 ### Requirements
 |            Platform             | /stuff/                                                                                                                                                             |
 |:-------------------------------:|---------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-|          JVM / Android          | version - 12 or higher                                                                                                                                              |
-|          JVM / Windows          | version - 10 or higher, `reg query` access for the caller                                                                                                           |
-|           JVM / macOS           | version - 11 or higher, `sw_vers` access for the caller                                                                                                             |
+|          JVM / Windows          | version 10 or higher, `reg query` access for the caller                                                                                                             |
+|           JVM / macOS           | version 11 or higher, `sw_vers` access for the caller                                                                                                               |
 |       JVM / Linux (GTK3)        | GTK3 config dir (`_CONFIG_DIR_/gtk-3.0`) access for the caller                                                                                                      |
 |        JVM / Linux (KDE)        | KDE config dir (`_CONFIG_DIR_/plasma-org.kde.plasma.desktop-appletsrc`) access for the caller, tested on KDE 5                                                      |
 | JVM / Linux (FreeDesktop, dbus) | `dbus-send --user` access for the caller, XDG Desktop Portal must be installed in the system and it must support `org.freedesktop.appearance.color-scheme` protocol |
 
 ## Usage
-*A single line of code to get color on any supported platform*
+*A single line of code to get the accent color on any of the supported platforms*
 ```kotlin
 import com.lizowzskiy.accents.getAccentColor
 
