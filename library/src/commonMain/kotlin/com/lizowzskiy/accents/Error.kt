@@ -1,6 +1,6 @@
 package com.lizowzskiy.accents
 
-fun throwUnsupportedOsException(): Nothing {
+internal fun throwUnsupportedOsException(): Nothing {
     throw UnsupportedOperationException(
         "retrieving accent color on current system " +
                 "(name: ${System.getProperty("os.name")}, " +
