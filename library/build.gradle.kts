@@ -1,52 +1,42 @@
 plugins {
+    alias(libs.plugins.maven.publish)
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
 }
 
 android {
-    compileSdkVersion = "android-31"
+    compileSdk = 31
+    namespace = "com.lizowzskiy.accents"
     defaultConfig {
         minSdk = 23
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.toVersion(libs.versions.java.get())
+        targetCompatibility = JavaVersion.toVersion(libs.versions.java.get())
     }
 
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
 }
 
 kotlin {
-//    targetHierarchy.default()
-    jvmToolchain(17)
+    applyDefaultHierarchyTemplate()
+    jvmToolchain(libs.versions.java.get().toInt())
 
-    jvm {
-
-    }
+    jvm()
 
     androidTarget {
         publishLibraryVariants("release")
         compilations.all {
             kotlinOptions {
-                jvmTarget = "17"
+                jvmTarget = libs.versions.java.get()
             }
         }
     }
 
-//    linuxX64()
-
-//    macosX64()
-//    macosArm64()
-
     sourceSets {
-        val commonMain by getting {
-            dependencies {
-
-            }
-        }
         val commonTest by getting {
             dependencies {
-                implementation(libs.kotlin.test)
+                implementation(kotlin("test"))
             }
         }
 
@@ -55,17 +45,5 @@ kotlin {
                 implementation(libs.apache.commonLang)
             }
         }
-
-//        val androidMain by getting {
-//
-//        }
-    }
-}
-
-android {
-    namespace = "com.lizowzskiy.accents"
-    compileSdk = libs.versions.android.compileSdk.get().toInt()
-    defaultConfig {
-        minSdk = libs.versions.android.minSdk.get().toInt()
     }
 }
