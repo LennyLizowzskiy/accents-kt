@@ -1,4 +1,4 @@
-<img src="https://github.com/LennyLizowzskiy/accents-kt/assets/46971551/b55dca62-cafa-45dc-a794-09675755948b" width="64" align="right" alt="logo"/>
+[//]: # (<img src="https://github.com/LennyLizowzskiy/accents-kt/assets/46971551/b55dca62-cafa-45dc-a794-09675755948b" width="64" align="right" alt="logo"/>)
 
 # accents.kt
 Kotlin Multiplatform library for retrieving accent color in a simple way.
@@ -28,6 +28,27 @@ Also, I don't guarantee that I will be able to support Native and/or macOS targe
 | JVM / Linux (FreeDesktop, dbus) | `dbus-send --user` access for the caller, XDG Desktop Portal must be installed in the system and it must support `org.freedesktop.appearance.color-scheme` protocol |
 
 ## Usage
+### Configure dependencies
+1. Add `jitpack.io` repository in your root build.gradle
+```groovy
+// build.gradle
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        // ...
+        maven { url 'https://jitpack.io' }
+        // ...
+    }
+}
+```
+2. Add the dependency
+```groovy
+dependencies {
+    // replace RELEASE_TAG with the latest release from the Releases or Tags page
+    implementation 'com.github.LennyLizowzskiy:accents-kt:RELEASE_TAG' 
+}
+```
+## How to use
 *A single line of code to get the accent color on any of the supported platforms*
 ```kotlin
 import com.lizowzskiy.accents.getAccentColor
