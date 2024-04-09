@@ -1,4 +1,5 @@
 [//]: # (<img src="https://github.com/LennyLizowzskiy/accents-kt/assets/46971551/b55dca62-cafa-45dc-a794-09675755948b" width="64" align="right" alt="logo"/>)
+[![](https://jitpack.io/v/LennyLizowzskiy/accents-kt.svg)](https://jitpack.io/#LennyLizowzskiy/accents-kt)
 
 # accents.kt
 Kotlin Multiplatform library for retrieving accent color in a simple way.
