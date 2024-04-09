@@ -1,5 +1,5 @@
 plugins {
-    id("maven-publish")
+    alias(libs.plugins.maven.publish)
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
 }
