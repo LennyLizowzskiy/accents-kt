@@ -1,4 +1,5 @@
 [versions]
+java = "17"
 agp = "8.2.2"
 kotlin = "1.9.23"
 maven-publish = "0.25.3"

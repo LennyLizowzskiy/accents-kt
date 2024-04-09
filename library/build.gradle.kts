@@ -4,8 +4,6 @@ plugins {
     alias(libs.plugins.androidLibrary)
 }
 
-val javaVer = JavaVersion.VERSION_17
-
 android {
     compileSdk = 31
     namespace = "com.lizowzskiy.accents"
@@ -13,8 +11,8 @@ android {
         minSdk = 23
     }
     compileOptions {
-        sourceCompatibility = javaVer
-        targetCompatibility = javaVer
+        sourceCompatibility = JavaVersion.toVersion(libs.versions.java.get())
+        targetCompatibility = JavaVersion.toVersion(libs.versions.java.get())
     }
 
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
@@ -22,7 +20,7 @@ android {
 
 kotlin {
     applyDefaultHierarchyTemplate()
-    jvmToolchain("$javaVer".toInt())
+    jvmToolchain(libs.versions.java.get().toInt())
 
     jvm()
 
@@ -30,7 +28,7 @@ kotlin {
         publishLibraryVariants("release")
         compilations.all {
             kotlinOptions {
-                jvmTarget = "$javaVer"
+                jvmTarget = libs.versions.java.get()
             }
         }
     }
