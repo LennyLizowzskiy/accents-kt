@@ -7,7 +7,7 @@ plugins {
 val javaVer = JavaVersion.VERSION_17
 
 android {
-    compileSdkVersion = "android-31"
+    compileSdk = 31
     namespace = "com.lizowzskiy.accents"
     defaultConfig {
         minSdk = 23
