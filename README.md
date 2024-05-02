@@ -26,7 +26,7 @@ Also, I don't guarantee that I will be able to support Native and/or macOS targe
 |           JVM / macOS           | version 11 or higher, `sw_vers` access for the caller                                                                                                               |
 |       JVM / Linux (GTK3)        | GTK3 config dir (`_CONFIG_DIR_/gtk-3.0`) access for the caller                                                                                                      |
 |        JVM / Linux (KDE)        | KDE config dir (`_CONFIG_DIR_/plasma-org.kde.plasma.desktop-appletsrc`) access for the caller, tested on KDE 5                                                      |
-| JVM / Linux (FreeDesktop, dbus) | `dbus-send --user` access for the caller, XDG Desktop Portal must be installed in the system and it must support `org.freedesktop.appearance.color-scheme` protocol |
+| JVM / Linux (FreeDesktop, dbus) | `busctl` access for the caller, XDG Desktop Portal must be installed in the system and it must support `org.freedesktop.appearance.color-scheme` protocol |
 
 ## Usage
 ### Configure dependencies
@@ -53,7 +53,7 @@ dependencies {
 or per-platform release:
 ```groovy
 dependencies {
-    // replace PLATFORM with needed, for example library-jvm
+// replace PLATFORM with the one you need (example: `library-jvm`)
     implementation 'com.github.LennyLizowzskiy.accents-kt:PLATFORM:RELEASE_TAG' 
 }
 ```
@@ -70,7 +70,7 @@ Calling from Java:
 import com.lizowzskiy.accents.AccentUtil;
 import com.lizowzskiy.accents.Color;
 
-class Foo {
+public class Foo {
     public void bar() {
         Color accent = AccentUtil.getAccentColor();
         System.out.println(accent);
