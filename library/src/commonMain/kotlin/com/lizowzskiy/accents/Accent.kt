@@ -31,7 +31,7 @@ data class Color internal constructor(
                 .replaceFirst("#", "")
                 .chunked(2)
 
-            return when (input.length - 1) {
+            return when (input.length) {
                 6, 8 -> {
                     val (r, g, b) =
                         try {
