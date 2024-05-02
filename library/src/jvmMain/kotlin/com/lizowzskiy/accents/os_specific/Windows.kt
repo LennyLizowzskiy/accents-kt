@@ -44,14 +44,14 @@ internal fun getWindowsAccentColorFromRegistry(
     }
 
     val result = try {
-        // output format: #aarrggbb
+        // output format: #aabbggrr
         val hexColor = hexColorRegex.find(output)?.value
             ?: throw IllegalArgumentException("no value $value was found at $path")
 
         Color.fromHexRgb(
             input = run {
                 val alpha = hexColor.substring(0, 2)
-                val rgb = hexColor.substring(2)
+                val rgb = hexColor.substring(2).chunked(2).reversed().joinToString("")
 
                 rgb + alpha
             }
