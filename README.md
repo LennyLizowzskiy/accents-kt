@@ -49,6 +49,14 @@ dependencies {
     implementation 'com.github.LennyLizowzskiy:accents-kt:RELEASE_TAG' 
 }
 ```
+
+or per-platform release:
+```groovy
+dependencies {
+    // replace PLATFORM with needed, for example library-jvm
+    implementation 'com.github.LennyLizowzskiy.accents-kt:PLATFORM:RELEASE_TAG' 
+}
+```
 ## How to use
 *A single line of code to get the accent color on any of the supported platforms*
 ```kotlin
