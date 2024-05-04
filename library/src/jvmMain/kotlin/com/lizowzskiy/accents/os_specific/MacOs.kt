@@ -26,35 +26,34 @@ internal fun getMacOsAccentColorFromCli(): Color {
     val result = try {
         val num = output.split("\n")[0].split(" ")[0]
         Accent.fromAppleAccentColorNum(num.toInt()).value
-    } catch(e: Exception) {
+    } catch (e: Exception) {
         throw UnsupportedOutputException(output, cause = e)
     }
 
     return result
 }
 
-internal fun getMacOsMajorVersion(): Int {
-    val version =
-        ProcessBuilder("sw_vers").apply {
-            redirectErrorStream(true)
-        }.use {
-            var version: String? = null
-            inputReader().use {
-                for (line in it.lines()) {
-                    if (line.startsWith("ProductVersion:")) {
-                        version = line.substringAfter("ProductVersion:").trim()
-                        break
-                    }
-                }
-            }
-            if (version == null)
-                throw IllegalArgumentException("ProductVersion was not found in sw_vers")
+internal fun getMacOsMajorVersion() = ProcessBuilder("sw_vers").apply {
+    redirectErrorStream(true)
+}.use {
+    inputReader().use { reader ->
+        reader.lines()
+            .filter { it.startsWith("ProductVersion:") }
+            .findFirst()
+            .map { it.substringAfter("ProductVersion:").trim() }
+            .map { parseMacOSVersion(it) }
+            .orElseThrow { IllegalArgumentException("ProductVersion was not found in sw_vers or has invalid format") }
+    }
+}
 
-            // FIXME add checks
-            version!!.split(".").first().toInt()
-        }
+private fun parseMacOSVersion(version: String): Int {
+    val versionParts = version.split(".")
+    if (versionParts.isEmpty() || versionParts[0].isEmpty()) {
+        throw IllegalArgumentException("ProductVersion has invalid format: $version")
+    }
 
-    return version
+    return versionParts[0].toIntOrNull()
+        ?: throw IllegalArgumentException("ProductVersion has invalid major version: $version")
 }
 
 private enum class Accent(val value: Color) {
