@@ -4,6 +4,7 @@ import com.lizowzskiy.accents.Color
 import com.lizowzskiy.accents.UnauthorizedAccessException
 import com.lizowzskiy.accents.UnsupportedOutputException
 import com.lizowzskiy.accents.util.getFullOutput
+import kotlin.LazyThreadSafetyMode.NONE
 
 internal fun getWindowsAccentColor(): Color {
     val osVersion = System.getProperty("os.version")
@@ -63,4 +64,6 @@ internal fun getWindowsAccentColorFromRegistry(
     return result
 }
 
-private val hexColorRegex = Regex("(?<=0x)[0-9a-fA-F]{6,8}")
+private val hexColorRegex by lazy(NONE) {
+    Regex("(?<=0x)[0-9a-fA-F]{6,8}")
+}
